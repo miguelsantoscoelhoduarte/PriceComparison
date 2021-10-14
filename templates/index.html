@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+<script type="text/javascript" src="js/table.js"></script>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+  <div class="search-container">
+      <input type="text" placeholder="Search.." name="search" id="searchbar">
+      <button onclick="search()">Search</button>
+  </div>
+</div>
+
+<div style="padding-left:16px">
+  <h2>Responsive Search Bar</h2>
+  <p>Price Comparison</p>
+</div>
+
+<table style="width:90%; margin-left:5%" id="table">
+  <tr>
+    <th>Shop Name</th>
+    <th>Product Name</th>
+    <th>Price(€)</th>
+  </tr>
+</table>
+
+<script>
+function search() {
+	search = document.getElementById("searchbar").value;
+
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open("GET", "http://127.0.0.1:5000/AllWortenProducts/" + search);
+    xhr2.send();
+
+    xhr2.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+			var obj = JSON.parse(xhr2.responseText);
+            for (var i = 0; i < obj.length; i++) {
+					productName = obj[i]._Product__name;
+					productPrice = obj[i]._Product__price;
+					productShop = obj[i]._Product__shop;
+
+					var table = document.getElementById("table");
+					var tr = document.createElement('tr');
+					var td1 = document.createElement('td');
+					var td2 = document.createElement('td');
+					var td3 = document.createElement('td');
+
+					var text1 = document.createTextNode(productShop);
+					var text2 = document.createTextNode(productName);
+					var text3 = document.createTextNode(productPrice);
+
+					td1.appendChild(text1);
+					td2.appendChild(text2);
+					td3.appendChild(text3);
+					tr.appendChild(td1);
+					tr.appendChild(td2);
+					tr.appendChild(td3);
+					table.appendChild(tr);
+			}
+        }
+    };
+}
+
+</script>
+
+</body>
+</html>
